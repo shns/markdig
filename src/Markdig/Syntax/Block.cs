@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using Markdig.Parsers;
 
 namespace Markdig.Syntax
@@ -16,7 +18,7 @@ namespace Markdig.Syntax
         /// Initializes a new instance of the <see cref="Block"/> class.
         /// </summary>
         /// <param name="parser">The parser used to create this block.</param>
-        protected Block(BlockParser parser)
+        protected Block(BlockParser? parser)
         {
             Parser = parser;
             IsOpen = true;
@@ -26,12 +28,12 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets the parent of this container. May be null.
         /// </summary>
-        public ContainerBlock Parent { get; internal set;  }
+        public ContainerBlock? Parent { get; internal set;  }
 
         /// <summary>
         /// Gets the parser associated to this instance.
         /// </summary>
-        public BlockParser Parser { get; }
+        public BlockParser? Parser { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is still open.
@@ -51,12 +53,12 @@ namespace Markdig.Syntax
         /// <summary>
         /// Occurs when the process of inlines begin.
         /// </summary>
-        public event ProcessInlineDelegate ProcessInlinesBegin;
+        public event ProcessInlineDelegate? ProcessInlinesBegin;
 
         /// <summary>
         /// Occurs when the process of inlines ends for this instance.
         /// </summary>
-        public event ProcessInlineDelegate ProcessInlinesEnd;
+        public event ProcessInlineDelegate? ProcessInlinesEnd;
 
         /// <summary>
         /// Called when the process of inlines begin.
@@ -79,15 +81,16 @@ namespace Markdig.Syntax
         public void UpdateSpanEnd(int spanEnd)
         {
             // Update parent spans
-            var parent = this;
-            while (parent != null)
+            Block? block = this;
+            do
             {
-                if (spanEnd > parent.Span.End)
+                if (spanEnd > block.Span.End)
                 {
-                    parent.Span.End = spanEnd;
+                    block.Span.End = spanEnd;
                 }
-                parent = parent.Parent;
+                block = block.Parent;
             }
+            while (block != null);
         }
     }
 }
