@@ -2,10 +2,13 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -33,7 +36,7 @@ namespace Markdig.Syntax
         /// <summary>
         /// Gets the last child.
         /// </summary>
-        public Block LastChild => Count > 0 ? children[Count - 1] : null;
+        public Block? LastChild => Count > 0 ? children[Count - 1] : null;
 
         /// <summary>
         /// Specialize enumerator.
@@ -98,7 +101,7 @@ namespace Markdig.Syntax
             for (int i = 0; i < Count; i++)
             {
                 children[i].Parent = null;
-                children[i] = null;
+                children[i] = null!;
             }
 
             Count = 0;
@@ -198,7 +201,7 @@ namespace Markdig.Syntax
             {
                 Array.Copy(children, index + 1, children, index, Count - index);
             }
-            children[Count] = null;
+            children[Count] = null!;
         }
 
         public Block this[int index]
@@ -245,7 +248,7 @@ namespace Markdig.Syntax
             {
                 this.block = block;
                 index = 0;
-                current = null;
+                current = null!;
             }
 
             public Block Current => current;
@@ -268,17 +271,18 @@ namespace Markdig.Syntax
                 return MoveNextRare();
             }
 
+            [MethodImpl(MethodImplOptions.NoInlining)]
             private bool MoveNextRare()
             {
                 index = block.Count + 1;
-                current = null;
+                current = null!;
                 return false;
             }
 
             void IEnumerator.Reset()
             {
                 index = 0;
-                current = null;
+                current = null!;
             }
         }
 
