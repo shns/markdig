@@ -151,8 +151,7 @@ namespace Markdig.Syntax.Inlines
                 parent.AppendChild(inline);
             }
 
-            var container = this as ContainerInline;
-            if (copyChildren && container != null)
+            if (copyChildren && this is ContainerInline container)
             {
                 var newContainer = inline as ContainerInline;
                 // Don't append to a closed container
@@ -196,8 +195,7 @@ namespace Markdig.Syntax.Inlines
             var inline = this;
             while (inline != null)
             {
-                var delimiter = inline as T;
-                if (delimiter != null)
+                if (inline is T)
                 {
                     return true;
                 }

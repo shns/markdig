@@ -178,8 +178,7 @@ namespace Markdig.Extensions.DefinitionLists
                 return isBreakable ? BlockState.ContinueDiscard : BlockState.Continue;
             }
 
-            var paragraphBlock = definitionItem.LastChild as ParagraphBlock;
-            if (lastBlankLine == null && paragraphBlock != null)
+            if (lastBlankLine == null && definitionItem.LastChild is ParagraphBlock)
             {
                 return BlockState.Continue;
             }
