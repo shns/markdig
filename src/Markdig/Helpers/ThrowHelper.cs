@@ -5,6 +5,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace Markdig.Helpers
 {
@@ -14,41 +15,99 @@ namespace Markdig.Helpers
     [ExcludeFromCodeCoverage]
     internal static class ThrowHelper
     {
+        private const MethodImplOptions NoInlining = MethodImplOptions.NoInlining;
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentNullException(string paramName) => throw new ArgumentNullException(paramName);
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentNullException_item() => throw new ArgumentNullException("item");
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentNullException_text() => throw new ArgumentNullException("text");
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentNullException_label() => throw new ArgumentNullException("label");
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentNullException_key() => throw new ArgumentNullException("key");
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentNullException_name() => throw new ArgumentNullException("name");
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentNullException_markdown() => throw new ArgumentNullException("markdown");
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentNullException_writer() => throw new ArgumentNullException("writer");
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentNullException_leafBlock() => throw new ArgumentNullException("leafBlock");
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentNullException_markdownObject() => throw new ArgumentNullException("markdownObject");
 
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentException(string message) => throw new ArgumentException(message);
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentException(string message, string paramName) => throw new ArgumentException(message, paramName);
 
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentOutOfRangeException(string paramName) => throw new ArgumentOutOfRangeException(paramName);
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentOutOfRangeException(string message, string paramName) => throw new ArgumentOutOfRangeException(message, paramName);
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ArgumentOutOfRangeException_index() => throw new ArgumentOutOfRangeException("index");
 
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void InvalidOperationException(string message) => throw new InvalidOperationException(message);
 
+
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ThrowArgumentNullException(ExceptionArgument argument)
         {
             throw new ArgumentNullException(argument.ToString());
         }
 
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ThrowArgumentException(ExceptionArgument argument, ExceptionReason reason)
         {
             throw new ArgumentException(argument.ToString(), GetExceptionReason(reason));
         }
 
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionReason reason)
         {
             throw new ArgumentOutOfRangeException(argument.ToString(), GetExceptionReason(reason));
         }
 
+        [DoesNotReturn]
+        [MethodImpl(NoInlining)]
         public static void ThrowIndexOutOfRangeException()
         {
             throw new IndexOutOfRangeException();
