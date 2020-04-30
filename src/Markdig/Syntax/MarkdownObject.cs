@@ -22,8 +22,8 @@ namespace Markdig.Syntax
         /// as we expect less than 5~10 entries, usually typically 1 (HtmlAttributes)
         /// so it will gives faster access than a Dictionary, and lower memory occupation
         /// </summary>
-        private DataEntry[] attachedDatas;
-        private int count;
+        private DataEntry[] _attachedDatas;
+        private int _count;
 
         /// <summary>
         /// Gets or sets the text column this instance was declared (zero-based).
@@ -58,29 +58,29 @@ namespace Markdig.Syntax
         public void SetData(object key, object value)
         {
             if (key == null) ThrowHelper.ArgumentNullException_key();
-            if (attachedDatas == null)
+            if (_attachedDatas == null)
             {
-                attachedDatas = new DataEntry[1];
+                _attachedDatas = new DataEntry[1];
             }
             else
             {
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < _count; i++)
                 {
-                    if (attachedDatas[i].Key == key)
+                    if (_attachedDatas[i].Key == key)
                     {
-                        attachedDatas[i].Value = value;
+                        _attachedDatas[i].Value = value;
                         return;
                     }
                 }
-                if (count == attachedDatas.Length)
+                if (_count == _attachedDatas.Length)
                 {
-                    var temp = new DataEntry[attachedDatas.Length + 1];
-                    Array.Copy(attachedDatas, 0, temp, 0, count);
-                    attachedDatas = temp;
+                    var temp = new DataEntry[_attachedDatas.Length + 1];
+                    Array.Copy(_attachedDatas, 0, temp, 0, _count);
+                    _attachedDatas = temp;
                 }
             }
-            attachedDatas[count] = new DataEntry(key, value);
-            count++;
+            _attachedDatas[_count] = new DataEntry(key, value);
+            _count++;
         }
 
         /// <summary>
@@ -92,12 +92,14 @@ namespace Markdig.Syntax
         public bool ContainsData(object key)
         {
             if (key == null) ThrowHelper.ArgumentNullException_key();
+
+            var attachedDatas = _attachedDatas;
             if (attachedDatas == null)
             {
                 return false;
             }
 
-            for (int i = 0; i < count; i++)
+            for (int i = _count - 1; i >= 0 && (uint)i < (uint)attachedDatas.Length; i--)
             {
                 if (attachedDatas[i].Key == key)
                 {
@@ -116,11 +118,14 @@ namespace Markdig.Syntax
         public object GetData(object key)
         {
             if (key == null) ThrowHelper.ArgumentNullException_key();
+
+            var attachedDatas = _attachedDatas;
             if (attachedDatas == null)
             {
                 return null;
             }
-            for (int i = 0; i < count; i++)
+
+            for (int i = _count - 1; i >= 0 && (uint)i < (uint)attachedDatas.Length; i--)
             {
                 if (attachedDatas[i].Key == key)
                 {
@@ -139,21 +144,22 @@ namespace Markdig.Syntax
         public bool RemoveData(object key)
         {
             if (key == null) ThrowHelper.ArgumentNullException_key();
+
+            var attachedDatas = _attachedDatas;
             if (attachedDatas == null)
             {
                 return true;
             }
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < _count; i++)
             {
                 if (attachedDatas[i].Key == key)
                 {
-                    if (i < count - 1)
+                    if (i < _count - 1)
                     {
-                        Array.Copy(attachedDatas, i + 1, attachedDatas, i, count - i - 1);
+                        Array.Copy(attachedDatas, i + 1, attachedDatas, i, _count - i - 1);
                     }
-                    count--;
-                    attachedDatas[count] = new DataEntry();
+                    _attachedDatas[--_count] = default;
                     return true;
                 }
             }
