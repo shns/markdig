@@ -128,7 +128,7 @@ namespace Markdig.Parsers
                 c = line.NextChar();
             }
 
-            var tag = new char[10];
+            Span<char> tag = stackalloc char[10];
             var count = 0;
             for (; count < tag.Length; count++)
             {
@@ -152,7 +152,7 @@ namespace Markdig.Parsers
                 return BlockState.None;
             }
 
-            var tagName = new string(tag, 0, count);
+            var tagName = tag.Slice(0, count).ToString();
             var tagIndex = Array.BinarySearch(HtmlTags, tagName, StringComparer.Ordinal);
             if (tagIndex < 0)
             {
