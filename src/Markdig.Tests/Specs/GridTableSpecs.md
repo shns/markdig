@@ -53,6 +53,23 @@ The following is a valid row separator
 </table>
 ````````````````````````````````
 
+The previous spec with full width characters:
+
+```````````````````````````````` example
++------+------+
+| あい | うえ |
+.
+<table>
+<col style="width:50%" />
+<col style="width:50%" />
+<tbody>
+<tr>
+<td>あい</td>
+<td>うえ</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
 
 The following is not a valid row separator 
 ```````````````````````````````` example
@@ -97,6 +114,39 @@ Col3a</td>
 </table>
 ````````````````````````````````
 
+The previous spec with full width characters:
+
+```````````````````````````````` example
++--------+--------+--------+
+| 列1    | 列2    | 列3    |
+| 列1a   | 列2a   | 列3a   |
+| 列1b            | 列3b   |
+| 列1c                     |
+.
+<table>
+<col style="width:33.33%" />
+<col style="width:33.33%" />
+<col style="width:33.33%" />
+<tbody>
+<tr>
+<td>列1
+列1a</td>
+<td>列2
+列2a</td>
+<td>列3
+列3a</td>
+</tr>
+<tr>
+<td colspan="2">列1b</td>
+<td>列3b</td>
+</tr>
+<tr>
+<td colspan="3">列1c</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
 A row header is separated using `+========+` instead of `+---------+`:
 
 ```````````````````````````````` example
@@ -116,6 +166,25 @@ A row header is separated using `+========+` instead of `+---------+`:
 </table>
 ````````````````````````````````
 
+The previous spec with full width characters:
+
+```````````````````````````````` example
++------+------+
+| あい | うえ |
++======+======+
+.
+<table>
+<col style="width:50%" />
+<col style="width:50%" />
+<thead>
+<tr>
+<th>あい</th>
+<th>うえ</th>
+</tr>
+</thead>
+</table>
+````````````````````````````````
+
 The last column separator `|` may be omitted:
 
 ```````````````````````````````` example
@@ -129,6 +198,24 @@ The last column separator `|` may be omitted:
 <tr>
 <td>This is</td>
 <td>a table with a longer text in the second column</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+The previous spec with full width characters:
+
+```````````````````````````````` example
++--------+--------+
+| これは | 2列目が長いテキストの表です
+.
+<table>
+<col style="width:50%" />
+<col style="width:50%" />
+<tbody>
+<tr>
+<td>これは</td>
+<td>2列目が長いテキストの表です</td>
 </tr>
 </tbody>
 </table>
@@ -220,6 +307,41 @@ D</td>
 </table>
 ````````````````````````````````
 
+The previous spec with full width characters:
+
+```````````````````````````````` example
++----+----+----+
+| あああ  | い |
++----+----+ い +
+| え | お | い |
++ え +----+----+
+| え | ううう  |
++----+----+----+
+.
+<table>
+<col style="width:33.33%" />
+<col style="width:33.33%" />
+<col style="width:33.33%" />
+<tbody>
+<tr>
+<td colspan="2">あああ</td>
+<td rowspan="2">い
+い
+い</td>
+</tr>
+<tr>
+<td rowspan="2">え
+え
+え</td>
+<td>お</td>
+</tr>
+<tr>
+<td colspan="2">ううう</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
 A grid table may have cells with both colspan and rowspan:
 
 ```````````````````````````````` example
@@ -249,6 +371,40 @@ AAAAA</td>
 <td>D</td>
 <td>E</td>
 <td>F</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+The previous spec with full width characters:
+
+```````````````````````````````` example
++----+----+----+
+| あ ああ | い |
++ あ ああ +----+
+| あ ああ | う |
++----+----+----+
+| え | お | か |
++----+----+----+
+.
+<table>
+<col style="width:33.33%" />
+<col style="width:33.33%" />
+<col style="width:33.33%" />
+<tbody>
+<tr>
+<td colspan="2" rowspan="2">あ ああ
+あ ああ
+あ ああ</td>
+<td>い</td>
+</tr>
+<tr>
+<td>う</td>
+</tr>
+<tr>
+<td>え</td>
+<td>お</td>
+<td>か</td>
 </tr>
 </tbody>
 </table>

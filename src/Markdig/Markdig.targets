@@ -25,10 +25,34 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <PackageReference Include="System.Memory" Version="4.5.4" />
+    <Reference Include="Wcwidth">
+      <HintPath>lib/Wcwidth/net452/Wcwidth.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Memory" Version="4.5.4" />
+    <Reference Include="Wcwidth">
+      <HintPath>lib/Wcwidth/netstandard2.0/Wcwidth.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
+    <Reference Include="Wcwidth">
+      <HintPath>lib/Wcwidth/netstandard2.0/Wcwidth.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
+    <Reference Include="Wcwidth">
+      <HintPath>lib/Wcwidth/netstandard2.0/Wcwidth.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+    <Reference Include="Wcwidth">
+      <HintPath>lib/Wcwidth/netstandard2.0/Wcwidth.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">

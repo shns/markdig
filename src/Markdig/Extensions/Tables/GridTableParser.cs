@@ -136,14 +136,17 @@ namespace Markdig.Extensions.Tables
         private static void SetRowSpanState(List<GridTableState.ColumnSlice> columns, StringSlice line, out bool isHeaderRow, out bool hasRowSpan)
         {
             var lineStart = line.Start;
+            var lineEnd = line.End;
             isHeaderRow = line.PeekChar() == '=' || line.PeekChar(2) == '=';
             hasRowSpan = false;
             foreach (var columnSlice in columns)
             {
                 if (columnSlice.CurrentCell != null)
                 {
-                    line.Start = lineStart + columnSlice.Start + 1;
-                    line.End = lineStart + columnSlice.End - 1;
+                    var columnWidthStart = GetWidthOffset(line, lineStart, lineEnd, columnSlice.Start);
+                    var columnWidthEnd = GetWidthOffset(line, lineStart, lineEnd, columnSlice.End);
+                    line.Start = lineStart + columnWidthStart + 1;
+                    line.End = lineStart + columnWidthEnd - 1;
                     line.Trim();
                     if (line.IsEmptyOrWhitespace() || !IsRowSeperator(line))
                     {
@@ -183,7 +186,7 @@ namespace Markdig.Extensions.Tables
                 if (columnSlice.CurrentCell != null)
                 {
                     currentRow ??= new TableRow();
-                    
+
                     // If this cell does not already belong to a row
                     if (columnSlice.CurrentCell.Parent is null)
                     {
@@ -241,21 +244,23 @@ namespace Markdig.Extensions.Tables
                 var nextColumn = nextColumnIndex < columns.Count ? columns[nextColumnIndex] : null;
 
                 var sliceForCell = line;
-                sliceForCell.Start = line.Start + columnSlice.Start + 1;
+                var columnWidthStart = GetWidthOffset(line, line.Start, line.End, columnSlice.Start);
+                sliceForCell.Start = line.Start + columnWidthStart + 1;
                 if (nextColumn != null)
                 {
-                    sliceForCell.End = line.Start + nextColumn.Start - 1;
+                    var nextColumnWidthStart = GetWidthOffset(line, line.Start, line.End, nextColumn.Start);
+                    sliceForCell.End = line.Start + nextColumnWidthStart - 1;
                 }
                 else
                 {
-                    var columnEnd = columns[columns.Count - 1].End;
-                    var columnEndChar = line.PeekCharExtra(columnEnd);
+                    var columnWidthEnd = GetWidthOffset(line, line.Start, line.End, columns[columns.Count - 1].End);
+                    var columnEndChar = line.PeekCharExtra(columnWidthEnd);
                     // If there is a `|` (or a `+` in the case that we are dealing with a row line 
                     // with spanned contents) exactly at the expected end of the table row, we cut the line
                     // otherwise we allow to have the last cell of a row to be open for longer cell content
                     if (columnEndChar == '|' || (isRowLine && columnEndChar == '+'))
                     {
-                        sliceForCell.End = line.Start + columnEnd - 1;
+                        sliceForCell.End = line.Start + columnWidthEnd - 1;
                     }
                     else if (line.PeekCharExtra(line.End) == '|')
                     {
@@ -293,6 +298,30 @@ namespace Markdig.Extensions.Tables
             return BlockState.ContinueDiscard;
         }
 
+        private static int GetWidthOffset(StringSlice line, int start, int end, int lengthOffset)
+        {
+            var width = lengthOffset;
+            var currentWidth = 0;
+            int i = start;
+            for (; i <= end; ++i)
+            {
+                // +------+------+
+                // | あい | うえ |
+                //
+                // columnSlices[0]: Start = 0, End = 7
+                // columnSlices[1]: Start = 7, End = 14
+                // length offset: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+                // width offset : 0, 1, 2, 2, 3, 3, 4, 5, 6, 7,  7,  8,  8,  9, 10
+                var c = line.PeekCharAbsolute(i);
+                currentWidth += Wcwidth.UnicodeCalculator.GetWidth(c);
+                if (width < currentWidth)
+                {
+                    return i - start;
+                }
+            }
+            return i - start;
+        }
+
         private static void SetColumnSpanState(List<GridTableState.ColumnSlice> columns, StringSlice line)
         {
             foreach (var columnSlice in columns)
@@ -306,7 +335,8 @@ namespace Markdig.Extensions.Tables
             for (int i = 0; i < columns.Count; i++)
             {
                 var columnSlice = columns[i];
-                var peek = line.PeekChar(columnSlice.Start);
+                var columnWidthStart = GetWidthOffset(line, line.Start, line.End, columnSlice.Start);
+                var peek = line.PeekChar(columnWidthStart);
                 if (peek == '|' || peek == '+')
                 {
                     columnIndex = i;
